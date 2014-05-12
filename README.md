@@ -10,5 +10,3 @@ To do:
 * Build/run Artifactory in Docker
 * Build/run DropWizard example app
 * Repeat...
-
-;^)
