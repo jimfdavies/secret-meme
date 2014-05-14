@@ -16,4 +16,4 @@ RUN npm install && chmod +x bin/hubot
 
 ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-#CMD ["supervisord", "-n"]
+CMD ["/usr/bin/supervisord"]
