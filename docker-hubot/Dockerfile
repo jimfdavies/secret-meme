@@ -6,8 +6,8 @@ RUN yum install -y redis python-setuptools wget tar
 RUN easy_install supervisor
 
 RUN wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-x64.tar.gz
-RUN tar zxf node-v0.10.4.tar.gz
-RUN cd node-v0.10.4
+RUN tar zxf node-v0.10.28.tar.gz
+RUN cd node-v0.10.28
 
 # Add precise/universe mirrors
 #RUN  echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
