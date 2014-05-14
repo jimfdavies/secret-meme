@@ -14,6 +14,6 @@ RUN npm install && chmod +x bin/hubot
 # Create hubot system user
 #RUN adduser --disabled-password --gecos "" hubot
 
-ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisor.conf /etc/supervisord.conf
 
 CMD ["/usr/bin/supervisord"]
