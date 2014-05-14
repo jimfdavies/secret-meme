@@ -6,6 +6,3 @@ ssh docker@127.0.0.1 -p 2222
 git clone https://github.com/jimfdavies/secret-meme.git
 cd secret-meme
 git checkout master
-
-chmod a+x docker-init.sh
-./docker-init.sh
