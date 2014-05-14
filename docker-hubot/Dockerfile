@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER Jim Davies "jimfdavies@googlemail.com"
 
 RUN yum install -y http://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-RUN yum install -y redis python-setuptools wget
+RUN yum install -y redis python-setuptools wget tar
 RUN easy_install supervisor
 
 RUN wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-x64.tar.gz
