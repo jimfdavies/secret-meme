@@ -2,8 +2,10 @@ FROM centos:latest
 MAINTAINER Jim Davies "jimfdavies@googlemail.com"
 
 RUN yum install -y http://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-RUN yum install -y redis python-setuptools nodejs
+RUN yum install -y redis python-setuptools nodejs npm
 RUN easy_install supervisor
+
+RUN npm --version
 
 # Add precise/universe mirrors
 #RUN  echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
