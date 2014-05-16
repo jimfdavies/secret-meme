@@ -1,0 +1,105 @@
+#!bash
+
+# Specifically for BASH console (Git Bash) and Oracle VirtualBox on Windows 7+
+# Refs: 
+# https://raw.githubusercontent.com/boot2docker/boot2docker/master/boot2docker
+# http://docs.docker.io/installation/windows/
+
+VM_NAME=boot2docker-vm
+VBOX_DIR="/c/Program Files/Oracle/VirtualBox"
+VBM_EXE="vboxmanage"
+VBM="$VBOX_DIR/$VBM_EXE"
+
+VM_OSTYPE=Linux26_64
+VM_MEM=1024
+VM_NIC=virtio
+
+SSH_HOST_PORT=2022
+DOCKER_PORT=4243
+BOOT2DOCKER_ISO=/c/boot2docker.iso
+
+download_latest() {
+    #LATEST_RELEASE=$(get_latest_release_name)
+    #https://github.com/boot2docker/boot2docker/releases/download/v0.9.1/boot2docker.iso
+    LATEST_RELEASE=v0.9.1
+    #mkdir -p "${BOOT2DOCKER_ISO%/*}"
+    curl -L -o "$BOOT2DOCKER_ISO" "https://github.com/boot2docker/boot2docker/releases/download/$LATEST_RELEASE/boot2docker.iso"
+}
+
+init() {
+
+  "$VBM" createvm --name $VM_NAME --register
+  "$VBM" modifyvm $VM_NAME \
+    --ostype $VM_OSTYPE \
+    --memory $VM_MEM \
+    --acpi on \
+    --boot1 dvd
+
+  "$VBM" modifyvm $VM_NAME \
+    --nic1 nat \
+    --nictype1 $VM_NIC \
+    --cableconnected1 on
+
+  "$VBM" modifyvm $VM_NAME \
+    --natpf1 "ssh,tcp,127.0.0.1,$SSH_HOST_PORT,,22" \
+    --natpf1 "docker,tcp,127.0.0.1,$DOCKER_PORT,,4243"
+
+  if [ ! -e "$BOOT2DOCKER_ISO" ]; then
+    echo "boot2docker.iso not found."
+    download_latest
+  fi
+
+  #"$VBM" storagectl $VM_NAME --name "SATA" --remove
+  "$VBM" storagectl $VM_NAME --name "SATA" --add sata --hostiocache on
+  "$VBM" storageattach $VM_NAME --storagectl "SATA" --port 0 --device 0 --type dvddrive --medium "$BOOT2DOCKER_ISO"
+
+}
+
+start() {
+
+  "$VBM" startvm $VM_NAME --type headless
+
+  #echo "To connect the docker client to the Docker daemon, please set:"
+  #echo "export DOCKER_HOST=tcp://localhost:${DOCKER_PORT}"
+
+}
+
+stop() {
+  
+  "$VBM" controlvm $VM_NAME acpipowerbutton
+
+}
+
+delete() {
+
+  "$VBM" unregistervm --delete $VM_NAME 
+
+}
+
+do_ssh() {
+    ssh -o StrictHostKeyChecking=no -o LogLevel=quiet -o UserKnownHostsFile=/dev/null -p $SSH_HOST_PORT docker@localhost $*
+}
+
+case $1 in
+    init | setup) init;;
+    start | up) start;;
+    stop | halt | down) stop;;
+    delete) delete;;
+    ssh) shift; do_ssh "$@";;
+    *) echo "Usage $0 {init|start|up|save|pause|stop|restart|status|info|delete|ssh|download}"; exit 1
+esac
+
+
+# case $1 in
+#     init | setup) init;;
+#     start | up) start;;
+#     save | pause | suspend) suspend;;
+#     stop | halt | down) stop;;
+#     restart) restart;;
+#     status) status;;
+#     info) info;;
+#     delete) delete;;
+#     ssh) shift; do_ssh "$@";;
+#     download) download_latest;;
+#     *) echo "Usage $0 {init|start|up|save|pause|stop|restart|status|info|delete|ssh|download}"; exit 1
+# esac
