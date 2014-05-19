@@ -11,8 +11,8 @@ RUN hubot --create /usr/local/hubot
 WORKDIR /usr/local/hubot
 RUN npm install && chmod +x bin/hubot
 
-ENV HUBOT_FLOWDOCK_LOGIN_EMAIL blah@msm.com
-ENV HUBOT_FLOWDOCK_LOGIN_PASSWORD password
+#ENV HUBOT_FLOWDOCK_LOGIN_EMAIL blah@msm.com # Set at 'docker run' time
+#ENV HUBOT_FLOWDOCK_LOGIN_PASSWORD password # Set at 'docker run' time
 
 ADD package.json /usr/local/hubot/package.json
 ADD supervisor.conf /etc/supervisord.conf
