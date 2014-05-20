@@ -8,3 +8,6 @@ RUN easy_install supervisor
 RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 RUN rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
 RUN yum install -y jenkins
+
+EXPOSE 8080
+CMD ["/sbin/service jenkins start"]
